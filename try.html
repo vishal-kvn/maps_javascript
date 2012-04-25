@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        html { height: 100% }
+        body { height: 100%; margin: 0; padding: 0 }
+        #map_canvas { height: 100% }
+    </style>
+    <script type="text/javascript"
+            src="http://maps.googleapis.com/maps/api/js?sensor=false">
+    </script>
+    <script>
+        var clat;
+        var clng;
+    </script>
+    <script type="text/javascript">
+
+            if (navigator.geolocation)
+            {
+                navigator.geolocation.getCurrentPosition(handle_geolocation_query, handle_errors);
+            }
+
+        function handle_errors(error)
+        {
+            switch(error.code)
+            {
+                case error.PERMISSION_DENIED: alert("user did not share geolocation data");
+                    break;
+
+                case error.POSITION_UNAVAILABLE: alert("could not detect current position");
+                    break;
+
+                case error.TIMEOUT: alert("retrieving position timedout");
+                    break;
+
+                default: alert("unknown error");
+                    break;
+            }
+        }
+
+        function handle_geolocation_query(position){
+//                alert('Lat: ' + position.coords.latitude + ' ' +
+//                    'Lon: ' + position.coords.latitude);
+            clat = position.coords.latitude;//40.714623; //37.4419444;//40.353;//
+            clng = position.coords.longitude;//-74.006605;//-122.1419444;//-74.673;//
+
+            console.log('values to map current location' + 'lat: ' + clat + ' lng: ' + clng);
+        }
+
+        // Standard google maps function
+        function initialize() {
+            var myLatlng = new google.maps.LatLng(38,-97);
+            var myOptions = {
+                zoom: 3,
+                center: myLatlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+            map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        }
+
+        // Function for adding a marker to the page.
+        function addMarker(location) {
+            marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                animation: google.maps.Animation.DROP
+            });
+        }
+
+        // Testing the addMarker function
+        function TestMarker() {
+            Marker1=new google.maps.LatLng(clat, clng); addMarker(Marker1);
+
+        }
+    </script>
+</head>
+<body onload="initialize()">
+
+
+<div id="map_canvas" style="border: 1px solid black; width: 500px; height: 400px;">map     div</div>
+<p style="margin-top: 5px">
+    <button id="drop" onclick="TestMarker()">Drop</button>
+</p>
+
+</body>
+</html>
